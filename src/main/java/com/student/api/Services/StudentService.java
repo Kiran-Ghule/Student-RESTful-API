@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
 
-    @Autowired
-    ModelMapper modelMapper;
+
+    ModelMapper modelMapper=new ModelMapper();
 
     @Autowired
     StudentRepos sRepo;
