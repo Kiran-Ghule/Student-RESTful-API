@@ -1,10 +1,14 @@
 package com.student.api.Controllers;
 
 import com.student.api.DTOs.StudentDTO;
+import com.student.api.Exceptions.NotFound;
 import com.student.api.Services.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,42 +22,46 @@ public class StudentController {
     StudentService studService;
 
     @GetMapping(path="/Get")
-    public List<StudentDTO> getStudents()
+    public ResponseEntity<List<StudentDTO>> getStudents()
     {
-        return studService.getStudents();
+        return new ResponseEntity<>(studService.getStudents(), HttpStatus.FOUND);
     }
 
     @PostMapping(path="/Post")
-    public StudentDTO postStudent( @Valid @RequestBody StudentDTO studentDTO)
+    public ResponseEntity<StudentDTO> postStudent( @Valid @RequestBody StudentDTO studentDTO)
     {
-        return studService.postStudent(studentDTO);
+        return new ResponseEntity<>(studService.postStudent(studentDTO),HttpStatus.CREATED);
     }
 
     @PutMapping(path="/Put/{id}")
-    public StudentDTO updateFulStudent(@PathVariable Long id, @RequestBody StudentDTO stud)
+    public ResponseEntity<StudentDTO> updateFulStudent(@PathVariable Long id, @RequestBody StudentDTO stud)
     {
-        return studService.updateFulStudent(id,stud);
+        return new ResponseEntity<>(studService.updateFulStudent(id,stud),HttpStatus.ACCEPTED);
     }
 
     @PatchMapping(path="/Patch/{id}")
-    public StudentDTO updateStudent(@PathVariable Long id, @RequestBody Map<String,Object> stud)
+    public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id, @RequestBody Map<String,Object> stud)
     {
-        return studService.updateStudent(id,stud);
+        return new ResponseEntity<>(studService.updateStudent(id,stud), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping(path="/Delete/{id}")
-    public String deleteStudentById(@PathVariable Long id)
+    public ResponseEntity<String> deleteStudentById(@PathVariable Long id)
     {
         if(studService.deleteStudentById(id))
-            return "Student Deleted Successfully...";
+            return new ResponseEntity<>("Student Deleted Successfully...",HttpStatus.OK);
         else
-            return "Student Not Found...";
+            return new ResponseEntity<>("Student Not Found...",HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(path="/Get/{id}")
-    public StudentDTO getStudentById(@PathVariable Long id)
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id)
     {
-        return studService.getStudentById(id);
+        StudentDTO stud=studService.getStudentById(id);
+        if(stud==null)
+            throw new NotFound("Student of Id "+id+" Not Found");
+        else
+            return new ResponseEntity<>(stud,HttpStatus.FOUND);
     }
 
 }
