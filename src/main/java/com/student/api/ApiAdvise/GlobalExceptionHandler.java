@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> notFoundExcep(NotFound exception)
     {
 
-        ApiError api=ApiError.builder().status(HttpStatus.NOT_FOUND).message("Record in not Found").suberr(null).build();
+        ApiError api=ApiError.builder().status(HttpStatus.NOT_FOUND).message(exception.getMessage()).suberr(null).build();
         return new ResponseEntity<>(api,HttpStatus.NOT_FOUND);
     }
 
