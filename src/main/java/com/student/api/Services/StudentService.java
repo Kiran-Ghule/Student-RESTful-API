@@ -2,6 +2,7 @@ package com.student.api.Services;
 
 import com.student.api.DTOs.StudentDTO;
 import com.student.api.DataBases.StudentEntity;
+import com.student.api.Exceptions.NotFound;
 import com.student.api.Repository.StudentRepos;
 import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
@@ -38,10 +39,15 @@ public class StudentService {
 
     public boolean isPresent(Long id)
     {
-        return sRepo.existsById(id);
+
+        if( sRepo.existsById(id))
+            return true;
+        else
+            throw new NotFound("Student Not Found...");
     }
 
     public StudentDTO updateFulStudent(Long id, StudentDTO stud) {
+        if(isPresent(id));
         StudentEntity student = modelMapper.map(stud,StudentEntity.class);
         student.setId(id);
         sRepo.save(student);

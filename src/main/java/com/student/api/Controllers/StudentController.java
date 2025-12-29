@@ -46,12 +46,12 @@ public class StudentController {
     }
 
     @DeleteMapping(path="/Delete/{id}")
-    public ResponseEntity<String> deleteStudentById(@PathVariable Long id)
+    public ResponseEntity<StudentDTO> deleteStudentById(@PathVariable Long id)
     {
         if(studService.deleteStudentById(id))
-            return new ResponseEntity<>("Student Deleted Successfully...",HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         else
-            return new ResponseEntity<>("Student Not Found...",HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(path="/Get/{id}")
