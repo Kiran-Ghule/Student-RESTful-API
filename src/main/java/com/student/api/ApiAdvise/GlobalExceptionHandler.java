@@ -14,23 +14,23 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFound.class)
-    public ResponseEntity<ApiError> notFoundExcep(NotFound exception)
+    public ResponseEntity<ApiResponse> notFoundExcep(NotFound exception)
     {
 
         ApiError api=ApiError.builder().status(HttpStatus.NOT_FOUND).message(exception.getMessage()).suberr(null).build();
-        return new ResponseEntity<>(api,HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(new ApiResponse(api),HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> notValid(MethodArgumentNotValidException exception)
+    public ResponseEntity<ApiResponse> notValid(MethodArgumentNotValidException exception)
     {
         List<String> list = exception.getBindingResult()
                                     .getAllErrors()
                                     .stream()
                                     .map(err->err.getDefaultMessage())
                                     .collect(Collectors.toList());
-
-        return new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST,"Data is Invalid...",list),HttpStatus.BAD_REQUEST);
+        ApiResponse response = new ApiResponse(new ApiError(HttpStatus.BAD_REQUEST,"Data is Invalid...",list));
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 
 }
